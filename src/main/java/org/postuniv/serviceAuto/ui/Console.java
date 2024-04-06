@@ -51,7 +51,7 @@ public class Console {
     }
 
     private ClientCard createClientCard() {
-        System.out.println("Please enter the ID of the car: ");
+        System.out.println("Please enter the ID of the client card: ");
         int id = new Scanner(System.in).nextInt();
         System.out.println("Please enter first name of the card's owner:");
         String firstName = new Scanner(System.in).next();
@@ -95,7 +95,9 @@ public class Console {
             // Entry selection
             System.out.println("Select which entry you want to manipulate: ");
             String[] entryList = new String[] {"Car", "ClientCard", "Transaction"};
+            String numberforEntryList = "  0         1          2";
             System.out.println(Arrays.toString(entryList));
+            System.out.println(numberforEntryList);
             String selectedEntry = entryList[new Scanner(System.in).nextInt()];
             // End entry selection
 
@@ -169,7 +171,7 @@ public class Console {
                         case "Transaction":
                             System.out.println("Please enter the ID of the transaction which you want to delete:");
                             int idTransaction = new Scanner(System.in).nextInt();
-                            this.transactionService.removeTransaction(idTransaction);
+                            this.transactionService.removeTransactionById(idTransaction);
                             break;
                     }break;
 
@@ -198,8 +200,10 @@ public class Console {
                 case SEARCH_CAR_AND_CLIENT_BY_NAME:
                     break;
                 case SHOW_TRANSACTIONS_BETWEEN_TWO_DATES:
+                    getTransactionsBetweenTwoDate();
                     break;
                 case SHOW_CARS_BY_REPARATION_COSTS:
+                    getTransactionsSortedByRepairCost();
                     break;
                 case CLIENT_CARDS_BY_DISCOUNTS:
                     break;
@@ -210,4 +214,22 @@ public class Console {
             }
         }
     }
+
+    private void getTransactionsSortedByRepairCost() {
+        System.out.println(transactionService.showByRepairLaborCostDesc());
+    }
+
+    private void getTransactionsBetweenTwoDate() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Introduce data inceput in format: AAAA-LL-ZZ");
+        String userStartDateInput = scanner.next();
+        System.out.println("Introduce data sfarsit in format AAAA-LL-ZZ");
+        String userEndDateInput = scanner.next();
+        LocalDate startDate = LocalDate.parse(userStartDateInput);
+        LocalDateTime localDateTimeStart = startDate.atStartOfDay();
+        LocalDate endDate = LocalDate.parse(userEndDateInput);
+        LocalDateTime localDateTimeEnd = endDate.atStartOfDay();
+        transactionService.getTransactionBetwenDates(localDateTimeStart, localDateTimeEnd).forEach(System.out::println);
+    }
+
 }

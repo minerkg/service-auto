@@ -7,6 +7,7 @@ import org.postuniv.serviceAuto.repository.CarServiceRepo;
 import org.postuniv.serviceAuto.repository.ReadTransactionFromFile;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,17 +100,16 @@ public class TransactionService {
         }
     }
 
-    public boolean removeTransaction(int idTransaction) {
-        return transactionsRepository.delete(idTransaction);
-    }
-
-    public List<Transaction> getTransactionByDate(LocalDateTime startingDate, LocalDateTime endingDate) {
+    public List<Transaction> getTransactionBetwenDates(LocalDateTime startingDate, LocalDateTime endingDate) {
         return getAllTransactions().
                 stream().
                 filter(
                         transaction -> transaction.getTransactionStamp().isAfter(startingDate) &&
                                 transaction.getTransactionStamp().isBefore(endingDate)).
                 collect(Collectors.toList());
+    }
+    public List<Transaction> showByRepairLaborCostDesc(){
+        return transactionsRepository.findAll().stream().sorted(Comparator.comparing(Transaction::getLaborPrice).reversed()).toList();
     }
 
 }
